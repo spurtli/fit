@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fit (3.1.0)
+    fit (1.0.0)
       bindata (= 2.3.0)
 
 GEM
