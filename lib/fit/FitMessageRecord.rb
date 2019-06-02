@@ -51,7 +51,7 @@ module Fit
       end
 
       if @name == 'file_id'
-        unless (entity_type = @message_record['type'].snapshot)
+        unless (entity_type = @message_record['file_type'].snapshot)
           Log.fatal 'Corrupted FIT file: file_id record has no type definition'
         end
         entity.set_type(entity_type)

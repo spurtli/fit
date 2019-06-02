@@ -16,7 +16,7 @@ require 'fit/GlobalFitMessage'
 module Fit
   GlobalFitMessages = GlobalFitMessageList.new do
     message 0, 'file_id'
-    field 0, 'enum', 'type', dict: 'file'
+    field 0, 'enum', 'file_type', dict: 'file' # type is a reserved word, prefix with dict name
     field 1, 'uint16', 'manufacturer', dict: 'manufacturer'
     alt_field 2, 'manufacturer' do
       field :default, 'uint16', 'product'
@@ -663,7 +663,7 @@ module Fit
     message 34, 'activity'
     field 0, 'uint32', 'total_timer_time', type: 'duration', scale: 1000
     field 1, 'uint16', 'num_sessions'
-    field 2, 'enum', 'type', dict: 'activity_type'
+    field 2, 'enum', 'activity_type', dict: 'activity_type'
     field 3, 'enum', 'event', dict: 'event'
     field 4, 'enum', 'event_type', dict: 'event_type'
     field 5, 'uint32', 'local_timestamp', type: 'date_time'
@@ -715,7 +715,7 @@ module Fit
     field 253, 'uint32', 'timestamp', type: 'date_time'
 
     message 72, 'training_file'
-    field 0, 'enum', 'type'
+    field 0, 'enum', 'training_file_type'
     field 1, 'uint16', 'manufacturer', dict: 'manufacturer'
     alt_field 2, 'manufacturer' do
       field :default, 'uint16', 'product'
@@ -951,7 +951,7 @@ module Fit
 
     # Not part of the official ANT SDK doc.
     message 216, 'heart_rate_zones'
-    field 0, 'uint16', 'type' # 19 for laps, 18 for sessions
+    field 0, 'uint16', 'heart_rate_zones_type' # 19 for laps, 18 for sessions
     field 1, 'uint16', 'lap_index'
     field 2, 'uint32', 'time_in_hr_zone', array: true, scale: 1000, unit: 's'
     field 5, 'uint32', 'undocumented_field_5'

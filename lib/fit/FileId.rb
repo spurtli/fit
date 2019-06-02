@@ -21,7 +21,7 @@ module Fit
       # Ignore the sub-seconds to avoid problems when comparing records.
       @time_created = Time.at(Time.now.to_i)
       @manufacturer = 'development'
-      @type = 'activity'
+      @file_type = 'activity'
 
       set_field_values(field_values)
     end
