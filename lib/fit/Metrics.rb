@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Metrics.rb -- Fit - FIT file processing library for Ruby
 #
@@ -17,7 +18,6 @@ require 'fit/DeviceInfo'
 require 'fit/TrainingStatus'
 
 module Fit
-
   # The Metrics object is a FIT file class. It's a top-level object that
   # holds all references to other FIT records that are part of the FIT file.
   # Each of the objects it references are direct equivalents of the message
@@ -26,13 +26,12 @@ module Fit
   # This is not part of the officially documented FIT API. Names may change in
   # the future if the real Garmin names get known.
   class Metrics < FitDataRecord
-
     attr_accessor :field_descriptions, :file_id, :file_creator, :device_infos
 
     # Create a new Metrics object.
     # @param field_values [Hash] A Hash that provides initial values for
     #        certain fields of the FitDataRecord.
-    def initialize(field_values = {})
+    def initialize(_field_values = {})
       super('metrics')
 
       @field_descriptions = []
@@ -45,8 +44,7 @@ module Fit
 
     # Perform some basic logical checks on the object and all references sub
     # objects. Any errors will be reported via the Log object.
-    def check
-    end
+    def check; end
 
     # Create a new FitDataRecord.
     # @param record_type [String] Type that identifies the FitDataRecord
@@ -70,9 +68,5 @@ module Fit
 
       record
     end
-
   end
-
 end
-
-

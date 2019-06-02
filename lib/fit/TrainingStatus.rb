@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = TrainingStatus.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,13 +14,11 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   # This class corresponds to the training_status message.
   #
   # This is not part of the officially documented FIT API. Names may change in
   # the future if the real Garmin names get known.
   class TrainingStatus < FitDataRecord
-
     def initialize(field_values = {})
       super('training_status')
       set_field_values(field_values)
@@ -36,11 +35,6 @@ module Fit
         @timestamp <=> fdr.timestamp
     end
 
-    def check(index)
-    end
-
+    def check(index); end
   end
-
 end
-
-

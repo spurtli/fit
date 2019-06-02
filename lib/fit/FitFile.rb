@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitFile.rb -- Fit - FIT file processing library for Ruby
 #
@@ -23,12 +24,10 @@ require 'fit/GlobalFitMessages'
 require 'fit/GlobalFitDictionaries'
 
 module Fit
-
   class FitFile
-
     include CRC16
 
-    def initialize()
+    def initialize
       @header = nil
     end
 
@@ -43,7 +42,7 @@ module Fit
 
       entities = []
       begin
-        while !io.eof?
+        until io.eof?
           offset = io.pos
 
           header = FitHeader.read(io)
@@ -124,9 +123,9 @@ module Fit
       crc_ref = io.readbyte.to_i | (io.readbyte.to_i << 8)
 
       unless crc == crc_ref
-        Log.error "Checksum error of segment #{start_pos} to #{end_pos} " +
-                  "in file '#{@file_name}'. " +
-                  "Computed 0x#{"%04X" % crc} instead of 0x#{"%04X" % crc_ref}."
+        Log.error "Checksum error of segment #{start_pos} to #{end_pos} " \
+                  "in file '#{@file_name}'. " \
+                  "Computed 0x#{format('%04X', crc)} instead of 0x#{format('%04X', crc_ref)}."
       end
     end
 
@@ -141,7 +140,5 @@ module Fit
         message_counters[record.number] += 1
       end
     end
-
   end
-
 end

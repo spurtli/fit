@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Activity.rb -- Fit - FIT file processing library for Ruby
 #
@@ -31,12 +32,10 @@ require 'fit/Event'
 require 'fit/PersonalRecords'
 
 module Fit
-
   # This is the most important class of this library. It holds references to
   # all other data structures. Each of the objects it references are direct
   # equivalents of the message record structures used in the FIT file.
   class Activity < FitDataRecord
-
     attr_accessor :file_id, :field_descriptions, :developer_data_ids, :epo_data,
                   :file_creator, :device_infos, :sensor_settings, :data_sources,
                   :user_data, :user_profiles, :physiological_metrics,
@@ -82,20 +81,20 @@ module Fit
     # objects. Any errors will be reported via the Log object.
     def check
       unless @timestamp && @timestamp >= Time.parse('1990-01-01T00:00:00+00:00')
-        Log.fatal "Activity has no valid timestamp"
+        Log.fatal 'Activity has no valid timestamp'
       end
       unless @total_timer_time
-        Log.fatal "Activity has no valid total_timer_time"
+        Log.fatal 'Activity has no valid total_timer_time'
       end
-      unless @device_infos.length > 0
-        Log.fatal "Activity must have at least one device_info section"
+      if @device_infos.empty?
+        Log.fatal 'Activity must have at least one device_info section'
       end
       @device_infos.each.with_index { |d, index| d.check(index) }
       @sensor_settings.each.with_index { |s, index| s.check(index) }
       unless @num_sessions == @sessions.count
         Log.fatal "Activity record requires #{@num_sessions}, but "
-                  "#{@sessions.length} session records were found in the "
-                  "FIT file."
+        "#{@sessions.length} session records were found in the "
+        'FIT file.'
       end
 
       # Records must have consecutively growing timestamps and distances.
@@ -103,9 +102,9 @@ module Fit
       distance = nil
       invalid_records = []
       @records.each_with_index do |r, idx|
-        Log.fatal "Record has no timestamp" unless r.timestamp
+        Log.fatal 'Record has no timestamp' unless r.timestamp
         if r.timestamp < ts
-          Log.fatal "Record has earlier timestamp than previous record"
+          Log.fatal 'Record has earlier timestamp than previous record'
         end
         if r.distance
           if distance && r.distance < distance
@@ -113,7 +112,7 @@ module Fit
             # broken. Unfortunately, the Skiing/Boarding app in the Fenix3
             # produces such broken FIT files. So we just warn about this
             # problem and discard the earlier records.
-            Log.error "Record #{r.timestamp} has smaller distance " +
+            Log.error "Record #{r.timestamp} has smaller distance " \
                       "(#{r.distance}) than an earlier record (#{distance})."
             # Index of the list record to be discarded.
             (idx - 1).downto(0) do |i|
@@ -144,7 +143,7 @@ module Fit
         lap.check(index)
         # If we have heart rate zone records, there should be one for each
         # lap
-        @heart_rate_zones[index].check(index) if @heart_rate_zones[index]
+        @heart_rate_zones[index]&.check(index)
       end
       @sessions.each { |s| s.check(self) }
     end
@@ -180,27 +179,25 @@ module Fit
       # Iterate over all the records and accumlate the distances between the
       # neiboring coordinates.
       @records.each do |r|
-        if (lat = r.position_lat) && (long = r.position_long)
-          if last_lat && last_long
-            distance = Fit::GeoMath.distance(last_lat, last_long,
-                                                  lat, long)
-            d += distance
-          end
-          if last_timestamp
-            speed = distance / (r.timestamp - last_timestamp)
-          end
-          if timer_stops[0] == r.timestamp
-            # If a stop event was found for this record timestamp we clear the
-            # last_* values so that the distance covered while being stopped
-            # is not added to the total.
-            last_lat = last_long = nil
-            last_timestamp = nil
-            timer_stops.shift
-          else
-            last_lat = lat
-            last_long = long
-            last_timestamp = r.timestamp
-          end
+        next unless (lat = r.position_lat) && (long = r.position_long)
+
+        if last_lat && last_long
+          distance = Fit::GeoMath.distance(last_lat, last_long,
+                                           lat, long)
+          d += distance
+        end
+        speed = distance / (r.timestamp - last_timestamp) if last_timestamp
+        if timer_stops[0] == r.timestamp
+          # If a stop event was found for this record timestamp we clear the
+          # last_* values so that the distance covered while being stopped
+          # is not added to the total.
+          last_lat = last_long = nil
+          last_timestamp = nil
+          timer_stops.shift
+        else
+          last_lat = lat
+          last_long = long
+          last_timestamp = r.timestamp
         end
       end
       d
@@ -209,8 +206,8 @@ module Fit
     # Call this method to update the aggregated data fields stored in Lap and
     # Session objects.
     def aggregate
-      @laps.each { |l| l.aggregate }
-      @sessions.each { |s| s.aggregate }
+      @laps.each(&:aggregate)
+      @sessions.each(&:aggregate)
     end
 
     # Convenience method that averages the speed over all sessions.
@@ -484,7 +481,7 @@ module Fit
         unless @cur_lap_records.empty?
           # Copy selected fields from section to lap.
           lap_field_values = {}
-          [ :timestamp, :sport ].each do |f|
+          %i[timestamp sport].each do |f|
             lap_field_values[f] = field_values[f] if field_values.include?(f)
           end
           # Ensure that all previous records have been assigned to a lap.
@@ -524,8 +521,5 @@ module Fit
 
       lap
     end
-
   end
-
 end
-

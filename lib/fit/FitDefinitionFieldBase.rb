@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitDefinitionFieldBase.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,24 +14,25 @@
 require 'fit/FitTypeDefs'
 
 module Fit
-
   module FitDefinitionFieldBase
-
-    def FitDefinitionFieldBase::fit_type_to_bin_data(fit_type)
+    def self.fit_type_to_bin_data(fit_type)
       entry = FIT_TYPE_DEFS.find { |e| e[0] == fit_type }
       raise "Unknown fit type #{fit_type}" unless entry
+
       entry[1]
     end
 
-    def FitDefinitionFieldBase::undefined_value(fit_type)
+    def self.undefined_value(fit_type)
       entry = FIT_TYPE_DEFS.find { |e| e[0] == fit_type }
       raise "Unknown fit type #{fit_type}" unless entry
+
       entry[2]
     end
 
     def set_type(fit_type)
       idx = FIT_TYPE_DEFS.index { |x| x[0] == fit_type }
       raise "Unknown type #{fit_type}" unless idx
+
       self.base_type_number = idx
       self.byte_count = FIT_TYPE_DEFS[idx][3]
     end
@@ -42,9 +44,9 @@ module Fit
     def is_array?
       if total_bytes > base_type_bytes
         if total_bytes % base_type_bytes != 0
-          Log.error "Total bytes (#{total_bytes}) must be multiple of " +
-                    "base type bytes (#{base_type_bytes}) of type " +
-                    "#{base_type_number.snapshot} in Global FIT " +
+          Log.error "Total bytes (#{total_bytes}) must be multiple of " \
+                    "base type bytes (#{base_type_bytes}) of type " \
+                    "#{base_type_number.snapshot} in Global FIT " \
                     "Message #{name}."
         end
         return true
@@ -53,7 +55,7 @@ module Fit
     end
 
     def total_bytes
-      self.byte_count.snapshot
+      byte_count.snapshot
     end
 
     def base_type_bytes
@@ -68,8 +70,8 @@ module Fit
 
     def checked_base_type_number
       if FIT_TYPE_DEFS.length <= base_type_number.snapshot
-        Log.error "Unknown FIT Base type #{base_type_number.snapshot} in " +
-          "Global FIT Message #{name}"
+        Log.error "Unknown FIT Base type #{base_type_number.snapshot} in " \
+                  "Global FIT Message #{name}"
         return 0
       end
       base_type_number.snapshot
@@ -79,8 +81,5 @@ module Fit
       if FIT_TYPE_DEFS.length <= base_type_number.snapshot
       end
     end
-
   end
-
 end
-

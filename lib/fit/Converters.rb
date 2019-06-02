@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Converters.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,9 +12,7 @@
 #
 
 module Fit
-
   module Converters
-
     def conversion_factor(from_unit, to_unit)
       factors = {
         'm' => { 'km' => 0.001, 'in' => 39.3701, 'ft' => 3.28084,
@@ -24,15 +23,16 @@ module Fit
         'kg' => { 'lbs' => 0.453592 }
       }
       return 1.0 if from_unit == to_unit
+
       unless factors.include?(from_unit)
-        Log.fatal "No conversion factors defined for unit " +
+        Log.fatal 'No conversion factors defined for unit ' \
                   "'#{from_unit}' to '#{to_unit}'"
       end
 
       factor = factors[from_unit][to_unit]
       if factor.nil?
-        Log.fatal "No conversion factor from '#{from_unit}' to '#{to_unit}' " +
-                  "defined."
+        Log.fatal "No conversion factor from '#{from_unit}' to '#{to_unit}' " \
+                  'defined.'
       end
       factor
     end
@@ -43,9 +43,9 @@ module Fit
         # before we crack it up.
         pace = (distance.to_f / (speed * 60.0)).round(2)
         int, dec = pace.divmod 1
-        "#{int}:#{'%02d' % (dec * 60)}"
+        "#{int}:#{format('%02d', (dec * 60))}"
       else
-        "-:--"
+        '-:--'
       end
     end
 
@@ -55,7 +55,7 @@ module Fit
       mins = secs / 60
       m = mins % 60
       h = mins / 60
-      "#{h}:#{'%02d' % m}"
+      "#{h}:#{format('%02d', m)}"
     end
 
     def secsToHMS(secs)
@@ -64,7 +64,7 @@ module Fit
       mins = secs / 60
       m = mins % 60
       h = mins / 60
-      "#{h}:#{'%02d' % m}:#{'%02d' % s}"
+      "#{h}:#{format('%02d', m)}:#{format('%02d', s)}"
     end
 
     def secsToDHMS(secs)
@@ -75,7 +75,7 @@ module Fit
       hours = mins / 60
       h = hours % 24
       d = hours / 24
-      "#{d} days #{h}:#{'%02d' % m}:#{'%02d' % s}"
+      "#{d} days #{h}:#{format('%02d', m)}:#{format('%02d', s)}"
     end
 
     def time_to_fit_time(t)
@@ -85,8 +85,5 @@ module Fit
     def fit_time_to_time(ft)
       Time.parse('1989-12-31T00:00:00+00:00') + ft.to_i
     end
-
   end
-
 end
-

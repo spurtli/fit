@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FileCreator.rb -- Fit - FIT file processing library for Ruby
 #
@@ -14,17 +15,12 @@ require 'fit/version'
 require 'fit/FitDataRecord'
 
 module Fit
-
   class FileCreator < FitDataRecord
-
     def initialize(field_values = {})
       super('file_creator')
       @software_version = VERSION.split('.').join('').to_i
 
       set_field_values(field_values)
     end
-
   end
-
 end
-

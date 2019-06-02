@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = fit.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,7 +14,6 @@
 require 'fit/FitFile'
 
 module Fit
-
   def self.read(file, filter = nil)
     FitFile.new.read(file, filter)
   end
@@ -21,6 +21,4 @@ module Fit
   def self.write(file, top_level_record)
     FitFile.new.write(file, top_level_record)
   end
-
 end
-

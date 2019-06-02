@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = PhysiologicalMetrics.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,10 +14,8 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   # This class corresponds to the physiological_metrics FIT message.
   class PhysiologicalMetrics < FitDataRecord
-
     # Create a new PhysiologicalMetrics object.
     # @param field_values [Hash] Hash that provides initial values for certain
     #        fields.
@@ -24,9 +23,5 @@ module Fit
       super('physiological_metrics')
       set_field_values(field_values)
     end
-
   end
-
 end
-
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitDataRecord.rb -- Fit - FIT file processing library for Ruby
 #
@@ -14,15 +15,13 @@ require 'fit/FitMessageIdMapper'
 require 'fit/GlobalFitMessages.rb'
 
 module Fit
-
   class FitDataRecord
-
     include Converters
 
-    RecordOrder = [ 'user_data', 'user_profile',
-                    'device_info', 'data_sources', 'event',
-                    'record', 'lap', 'session', 'heart_rate_zones',
-                    'personal_records' ]
+    RecordOrder = %w[user_data user_profile
+                     device_info data_sources event
+                     record lap session heart_rate_zones
+                     personal_records].freeze
 
     attr_reader :message
 
@@ -31,7 +30,7 @@ module Fit
 
       # Create instance variables that correspond to every field of the
       # corresponding FIT data record.
-      @message.fields_by_name.each do |name, field|
+      @message.fields_by_name.each do |name, _field|
         create_instance_variable(name)
       end
       # Meta fields are additional fields that are not part of the FIT
@@ -50,7 +49,7 @@ module Fit
     def set(name, value)
       ivar_name = '@' + name
       unless instance_variable_defined?(ivar_name)
-        Log.warn("Unknown FIT record field '#{name}' in global message " +
+        Log.warn("Unknown FIT record field '#{name}' in global message " \
                  "#{@message.name} (#{@message.number}).")
         return
       end
@@ -86,9 +85,11 @@ module Fit
       @message.fields_by_name.each do |name, field|
         ivar_name = '@' + name
         v1 = field.fit_to_native(field.native_to_fit(
-          instance_variable_get(ivar_name)))
+                                   instance_variable_get(ivar_name)
+                                 ))
         v2 = field.fit_to_native(field.native_to_fit(
-          fdr.instance_variable_get(ivar_name)))
+                                   fdr.instance_variable_get(ivar_name)
+                                 ))
 
         return false unless v1 == v2
       end
@@ -99,7 +100,7 @@ module Fit
     def <=>(fdr)
       @timestamp == fdr.timestamp ?
         RecordOrder.index(@message.name) <=>
-        RecordOrder.index(fdr.message.name) :
+          RecordOrder.index(fdr.message.name) :
         @timestamp <=> fdr.timestamp
     end
 
@@ -131,15 +132,15 @@ module Fit
 
       # Create a BinData::Struct object to store the data record.
       fields = []
-      global_fit_message.fields_by_number.each do |field_number, field|
+      global_fit_message.fields_by_number.each do |_field_number, field|
         bin_data_type = FitDefinitionFieldBase.fit_type_to_bin_data(field.type)
-        fields << [ bin_data_type, field.name ]
+        fields << [bin_data_type, field.name]
       end
-      bd = BinData::Struct.new(:endian => :little, :fields => fields)
+      bd = BinData::Struct.new(endian: :little, fields: fields)
 
       # Fill the BinData::Struct object with the values from the corresponding
       # instance variables.
-      global_fit_message.fields_by_number.each do |field_number, field|
+      global_fit_message.fields_by_number.each do |_field_number, field|
         iv = "@#{field.name}"
         if instance_variable_defined?(iv) &&
            !(iv_value = instance_variable_get(iv)).nil?
@@ -158,7 +159,7 @@ module Fit
 
     def inspect
       fields = {}
-      @message.fields_by_name.each do |name, field|
+      @message.fields_by_name.each do |_name, field|
         ivar_name = '@' + field.name
         fields[field.name] = instance_variable_get(ivar_name)
       end
@@ -174,8 +175,5 @@ module Fit
       # And create an accessor method for it as well.
       self.class.__send__(:attr_accessor, name)
     end
-
   end
-
 end
-

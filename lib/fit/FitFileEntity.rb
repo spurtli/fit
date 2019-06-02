@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitMessageRecord.rb -- Fit - FIT file processing library for Ruby
 #
@@ -16,7 +17,6 @@ require 'fit/GlobalFitMessage'
 require 'fit/Metrics'
 
 module Fit
-
   # The FIT file is a generic container for all kinds of data. This could be
   # activity data, config files, workout definitions, etc. All data is stored
   # in FIT message records. Also the information what kind of FIT file this is
@@ -26,7 +26,6 @@ module Fit
   # we use this utility class to store the read data until we know what Ruby
   # objec we need to use to store it for later consumption.
   class FitFileEntity
-
     attr_reader :top_level_record, :developer_fit_messages
 
     # Create a FitFileEntity.
@@ -40,7 +39,7 @@ module Fit
     # a derivative of FitDataRecord.
     def set_type(type)
       if @top_level_record
-        Log.fatal "FIT file type has already been set to " +
+        Log.fatal 'FIT file type has already been set to ' \
                   "#{@top_level_record.class}"
       end
       case type
@@ -76,15 +75,15 @@ module Fit
     # Check the consistency of the top-level object.
     def check
       return false unless @top_level_record
+
       @top_level_record.check
     end
 
     # Write the top-level object into a IO stream.
     def write(io, id_mapper)
       return unless @top_level_record
+
       @top_level_record.write(io, id_mapper)
     end
-
   end
-
 end

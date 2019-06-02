@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Record.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,11 +14,9 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   # The Record corresponds to the record FIT message. A Record is a basic set
   # of primary measurements that are associated with a certain timestamp.
   class Record < FitDataRecord
-
     # Create a new Record object.
     # @param field_values [Hash] Hash that provides initial values for certain
     #        fields.
@@ -33,8 +32,6 @@ module Fit
         (@cadence + @fractional_cadence) * 2
       elsif @cadence
         @cadence * 2
-      else
-        nil
       end
     end
 
@@ -47,8 +44,5 @@ module Fit
 
       1000.0 / (@speed * 60.0)
     end
-
   end
-
 end
-

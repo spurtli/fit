@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Event.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,9 +14,7 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class Event < FitDataRecord
-
     def initialize(field_values = {})
       super('event')
       set_field_values(field_values)
@@ -33,8 +32,5 @@ module Fit
             RecordOrder.index(fdr.message.name) :
         @timestamp <=> fdr.timestamp
     end
-
   end
-
 end
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = GlobalFitDictList.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,9 +14,7 @@
 require 'fit/Log'
 
 module Fit
-
   class GlobalFitDict
-
     def initialize
       @entries = {}
     end
@@ -34,11 +33,9 @@ module Fit
     def value_by_name(name)
       @entries.invert[name]
     end
-
   end
 
   class GlobalFitDictList
-
     def initialize(&block)
       @current_dict = nil
       @dicts = {}
@@ -53,16 +50,12 @@ module Fit
     end
 
     def entry(number, name)
-      unless @current_dict
-        Log.fatal "You must define a dictionary first"
-      end
+      Log.fatal 'You must define a dictionary first' unless @current_dict
       @current_dict.entry(number, name)
     end
 
     def [](name)
       @dicts[name]
     end
-
   end
-
 end

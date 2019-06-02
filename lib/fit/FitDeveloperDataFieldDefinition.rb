@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitDeveloperDataFieldDefinition.rb -- Fit - FIT file processing library for Ruby
 #
@@ -15,9 +16,7 @@ require 'fit/FitDefinitionFieldBase'
 require 'fit/FitTypeDefs'
 
 module Fit
-
   class FitDeveloperDataFieldDefinition < BinData::Record
-
     include FitDefinitionFieldBase
 
     uint8 :field_number
@@ -25,7 +24,7 @@ module Fit
     uint8 :developer_data_index
 
     def name
-      "developer_field_#{developer_data_index.snapshot}_" +
+      "developer_field_#{developer_data_index.snapshot}_" \
         "#{field_number.snapshot}"
     end
 
@@ -54,8 +53,8 @@ module Fit
           fd.developer_data_index == developer_data_index.snapshot
       end
       unless @field_definition
-        Log.error "Unknown developer field #{field_number.snapshot} " +
-          "for developer #{developer_data_index.snapshot}"
+        Log.error "Unknown developer field #{field_number.snapshot} " \
+                  "for developer #{developer_data_index.snapshot}"
         return nil
       end
 
@@ -68,7 +67,7 @@ module Fit
       if (field_definition = find_field_definition)
         "#{value} #{find_field_definition.units}"
       else
-        if value.kind_of?(Array)
+        if value.is_a?(Array)
           s = '[ '
           value.each do |v|
             v /= @field_def.scale.to_f if @field_def.scale
@@ -95,14 +94,12 @@ module Fit
       field = find_field_definition
       base_type_number = field.fit_base_type_id & 0x7F
       if FIT_TYPE_DEFS.length <= base_type_number
-        Log.error "Unknown FIT Base type #{base_type_number} in " +
-          "Global FIT Message #{name}"
+        Log.error "Unknown FIT Base type #{base_type_number} in " \
+                  "Global FIT Message #{name}"
         return 0
       end
 
       base_type_number
     end
-
   end
-
 end

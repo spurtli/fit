@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = GlobalFitMessage.rb -- Fit - FIT file processing library for Ruby
 #
@@ -15,19 +16,16 @@ require 'fit/Converters'
 require 'fit/FitDefinitionField'
 
 module Fit
-
   # The GlobalFitMessage stores an abstract description of a particular
   # FitMessage. It holds information like the name, the global ID number and
   # the data fields of the message.
   class GlobalFitMessage
-
     attr_reader :name, :number, :fields_by_name, :fields_by_number
 
     # The Field objects describe the name, type and optional attributes of a
     # FitMessage definition field. It also provides methods to convert field
     # values into various formats.
     class Field
-
       include Converters
 
       attr_reader :type, :name, :opts
@@ -48,7 +46,7 @@ module Fit
 
         case @opts[:type]
         when 'coordinate'
-          value *= 180.0 / 2147483648
+          value *= 180.0 / 2_147_483_648
         when 'date_time'
           value = fit_time_to_time(value)
         end
@@ -62,7 +60,7 @@ module Fit
 
         if @opts.include?(:dict) &&
            (dict = GlobalFitDictionaries[@opts[:dict]])
-          return [ dict.name(value) || "Undocumented value #{value}", nil ]
+          return [dict.name(value) || "Undocumented value #{value}", nil]
         end
 
         value /= @opts[:scale].to_f if @opts[:scale]
@@ -70,9 +68,9 @@ module Fit
 
         case @opts[:type]
         when 'coordinate'
-          value *= 180.0 / 2147483648
+          value *= 180.0 / 2_147_483_648
         when 'date_time'
-          value = fit_time_to_time(value).strftime("%Y-%m-%d %H:%M:%S")
+          value = fit_time_to_time(value).strftime('%Y-%m-%d %H:%M:%S')
         when 'duration'
           value = secsToDHMS(value)
         when 'activity_intensity'
@@ -80,9 +78,9 @@ module Fit
           # bit for the activity type and 3 bit for the intensity. Activty 0x8
           # is resting. Instead if value + unit we return activity type +
           # intensity here.
-          return [ value & 0x1F, (value >> 5) & 0x7 ]
+          return [value & 0x1F, (value >> 5) & 0x7]
         end
-        [ value, @opts[:unit] ]
+        [value, @opts[:unit]]
       end
 
       def fit_to_native(value)
@@ -97,7 +95,7 @@ module Fit
 
         case @opts[:type]
         when 'coordinate'
-          value *= 180.0 / 2147483648
+          value *= 180.0 / 2_147_483_648
         when 'date_time'
           value = fit_time_to_time(value)
         end
@@ -109,11 +107,11 @@ module Fit
         return FitDefinitionFieldBase.undefined_value(@type) if value.nil?
 
         if @opts.include?(:dict) && (dict = GlobalFitDictionaries[@opts[:dict]])
-          unless (dv = dict.value_by_name(value))
+          if (dv = dict.value_by_name(value))
+            return dv
+          else
             Log.error "Unknown value '#{value}' assigned to field #{@name}"
             return FitDefinitionFieldBase.undefined_value(@type)
-          else
-            return dv
           end
         end
 
@@ -122,7 +120,7 @@ module Fit
 
         case @opts[:type]
         when 'coordinate'
-          value = (value * 2147483648.0 / 180.0).to_i
+          value = (value * 2_147_483_648.0 / 180.0).to_i
         when 'date_time'
           value = time_to_fit_time(value)
         end
@@ -134,13 +132,12 @@ module Fit
       end
 
       def to_s(value)
-        return "[no value]" if value.nil?
+        return '[no value]' if value.nil?
 
         human_readable = to_human(value)
-        "#{human_readable[0]}" +
-          "#{ human_readable[1] ? " #{human_readable[1]}" : ''}"
+        "#{human_readable[0]}" \
+          "#{human_readable[1] ? " #{human_readable[1]}" : ''}"
       end
-
     end
 
     # A GlobalFitMessage may have Field entries that are dependent on the
@@ -149,7 +146,6 @@ module Fit
     # mutually exclusive. An AltField object models such a group of Field
     # objects.
     class AltField
-
       attr_reader :fields, :ref_field
 
       # Create a new AltField object.
@@ -181,7 +177,7 @@ module Fit
       # FitMessageRecord.
       def select(field_values_by_name)
         unless (value = field_values_by_name[@ref_field])
-          Log.fatal "The selection field #{@ref_field} for the alternative " +
+          Log.fatal "The selection field #{@ref_field} for the alternative " \
                     "field is undefined in global message #{@message.name}: " +
                     field_values_by_name.inspect
         end
@@ -190,10 +186,9 @@ module Fit
         end
         return @fields[:default] if @fields[:default]
 
-        Log.fatal "The selector value #{value} for the alternative field " +
+        Log.fatal "The selector value #{value} for the alternative field " \
                   "is not supported in global message #{@message.name}."
       end
-
     end
 
     # Create a new GlobalFitMessage definition.
@@ -276,11 +271,9 @@ module Fit
       definition.setup(global_fit_message)
       definition.write(io)
     end
-
   end
 
   class GlobalFitMessageList
-
     def initialize(&block)
       @current_message = nil
       @messages = {}
@@ -291,6 +284,7 @@ module Fit
       if @messages.include?(number)
         raise "Message #{number} has already been defined"
       end
+
       @messages[number] = @current_message = GlobalFitMessage.new(name, number)
     end
 
@@ -312,7 +306,7 @@ module Fit
       end
 
       local_message_type = 0
-      @messages.each do |number, message|
+      @messages.each do |_number, message|
         message.write(io, local_message_type)
       end
     end
@@ -322,24 +316,19 @@ module Fit
     end
 
     def field(number, type, name, opts = {})
-      unless @current_message
-        raise "You must define a message first"
-      end
+      raise 'You must define a message first' unless @current_message
+
       @current_message.field(number, type, name, opts)
     end
 
     def alt_field(number, ref_field, &block)
-      unless @current_message
-        raise "You must define a message first"
-      end
+      raise 'You must define a message first' unless @current_message
+
       @current_message.alt_field(number, ref_field, &block)
     end
 
     def [](number)
       @messages[number]
     end
-
   end
-
 end
-

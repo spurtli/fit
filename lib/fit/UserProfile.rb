@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = UserProfile.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,10 +14,8 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   # This class corresponds to the old_user_profile FIT message.
   class UserProfile < FitDataRecord
-
     # Create a new UserProfile object.
     # @param field_values [Hash] Hash that provides initial values for certain
     #        fields.
@@ -24,8 +23,5 @@ module Fit
       super('user_profile')
       set_field_values(field_values)
     end
-
   end
-
 end
-

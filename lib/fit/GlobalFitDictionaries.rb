@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = GlobalFitDictionaries.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,9 +14,7 @@
 require 'fit/GlobalFitDictList'
 
 module Fit
-
   GlobalFitDictionaries = GlobalFitDictList.new do
-
     dict 'activity_type'
     entry 0, 'generic'
     entry 1, 'running'
@@ -351,10 +350,10 @@ module Fit
     entry 2697, 'fenix5'
     entry 2957, 'fenix5_gps_galileo' # Just a guess
     entry 3111, 'fenix5x_plus'
-    entry 10007, 'sdm4'
-    entry 20119, 'training_center'
-    entry 65532, 'android_antplus_plugin'
-    entry 65534, 'connect'
+    entry 10_007, 'sdm4'
+    entry 20_119, 'training_center'
+    entry 65_532, 'android_antplus_plugin'
+    entry 65_534, 'connect'
 
     dict 'gender'
     entry 0, 'female'
@@ -673,8 +672,5 @@ module Fit
     entry 1, 'down'
     entry 2, 'maintaining'
     entry 3, 'up'
-
   end
-
 end
-

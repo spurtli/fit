@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FileId.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,12 +14,10 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class FileId < FitDataRecord
-
     def initialize(field_values = {})
       super('file_id')
-      @serial_number = 1234567890
+      @serial_number = 1_234_567_890
       # Ignore the sub-seconds to avoid problems when comparing records.
       @time_created = Time.at(Time.now.to_i)
       @manufacturer = 'development'
@@ -26,8 +25,5 @@ module Fit
 
       set_field_values(field_values)
     end
-
   end
-
 end
-

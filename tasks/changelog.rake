@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 require 'time'
 
 desc 'Generate the CHANGELOG file'
 task :changelog do
-
   class Entry
-
     attr_reader :type
 
     def initialize(ref, author, time, message)
@@ -26,11 +26,9 @@ task :changelog do
     def to_s
       "  * #{@message}\n"
     end
-
   end
 
   class Release
-
     attr_reader :date, :version, :tag
 
     def initialize(tag, predecessor)
@@ -43,7 +41,7 @@ task :changelog do
 
       # Get the date of the release
       date = Time.parse(/Date: (.*)/.match(`git show #{tag}`)[1]).utc
-      @date = date.strftime("%Y-%m-%d")
+      @date = date.strftime('%Y-%m-%d')
 
       @entries = []
       # Use -z option for git-log to get 0 bytes as separators.
@@ -108,11 +106,9 @@ task :changelog do
       end
       false
     end
-
   end
 
   class ChangeLog
-
     def initialize
       @releases = []
       predecessor = nil
@@ -127,11 +123,11 @@ task :changelog do
         next if release.empty?
 
         # We use RDOC markup syntax to generate a title
-        if release.version
-          s << "= Release #{release.version} (#{release.date})\n\n"
-        else
-          s << "= Next Release (Some Day)\n\n"
-        end
+        s << if release.version
+               "= Release #{release.version} (#{release.date})\n\n"
+             else
+               "= Next Release (Some Day)\n\n"
+             end
         s << release.to_s + "\n"
       end
       s
@@ -143,10 +139,9 @@ task :changelog do
     # numerical comparison for tag versions of the format 'release-X.X.X'. X
     # can be a multi-digit number.
     def compareTags(a, b)
-
       def versionToComparable(v)
-        /\d+\.\d+\.\d+/.match(v)[0].split('.').map{ |l| sprintf("%03d", l.to_i)}.
-                                                             join('.')
+        /\d+\.\d+\.\d+/.match(v)[0].split('.').map { |l| format('%03d', l.to_i) }
+                       .join('.')
       end
 
       versionToComparable(a) <=> versionToComparable(b)
@@ -154,16 +149,14 @@ task :changelog do
 
     def getReleaseVersions
       # Get list of release tags from Git repository
-      releaseVersions = `git tag`.split("\n").map { |r| r.chomp }.
-        delete_if { |r| ! (/v\d+\.\d+\.\d+/ =~ r) }.
-        sort{ |a, b| compareTags(a, b) }
+      releaseVersions = `git tag`.split("\n").map(&:chomp)
+                                 .delete_if { |r| !(/v\d+\.\d+\.\d+/ =~ r) }
+                                 .sort { |a, b| compareTags(a, b) }
       releaseVersions << 'HEAD'
     end
-
   end
 
   File.open('CHANGELOG', 'w+') do |changelog|
     changelog.puts ChangeLog.new.to_s
   end
-
 end

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Lap.rb -- Fit - FIT file processing library for Ruby
 #
@@ -14,9 +15,7 @@ require 'fit/FitDataRecord'
 require 'fit/RecordAggregator'
 
 module Fit
-
   class Lap < FitDataRecord
-
     include RecordAggregator
 
     attr_reader :records
@@ -27,7 +26,7 @@ module Fit
       @records = records
       @previous_lap = previous_lap
 
-      if previous_lap && previous_lap.records && previous_lap.records.last
+      if previous_lap&.records && previous_lap.records.last
         # Set the start time of the new lap to the timestamp of the last record
         # of the previous lap.
         @start_time = previous_lap.records.last.timestamp
@@ -36,9 +35,7 @@ module Fit
         @start_time = records.first.timestamp
       end
 
-      if records.last
-        @total_elapsed_time = records.last.timestamp - @start_time
-      end
+      @total_elapsed_time = records.last.timestamp - @start_time if records.last
 
       set_field_values(field_values)
     end
@@ -55,8 +52,5 @@ module Fit
 
       @total_distance / (@total_strides * 2.0)
     end
-
   end
-
 end
-

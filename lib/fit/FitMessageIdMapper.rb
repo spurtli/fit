@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitMessageIdMapper.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,7 +12,6 @@
 #
 
 module Fit
-
   # The FIT file maps GlobalFitMessage numbers to local numbers. Due to
   # restrictions in the format, only 16 local messages can be active at any
   # point in the file. If a GlobalFitMessage is needed that is currently not
@@ -19,7 +19,6 @@ module Fit
   # evicted. The FitMessageIdMapper is the objects that stores those 16 active
   # entries and can map global to local message numbers.
   class FitMessageIdMapper
-
     # The entry in the mapper.
     class Entry < Struct.new(:global_message, :last_use)
     end
@@ -31,7 +30,7 @@ module Fit
     # Add a new GlobalFitMessage to the mapper and return the local message
     # number.
     def add_global(message)
-      unless (slot = @entries.index { |e| e.nil? })
+      unless (slot = @entries.index(&:nil?))
         # No more free slots. We have to find the least recently used one.
         slot = 0
         0.upto(15) do |i|
@@ -56,8 +55,5 @@ module Fit
       end
       nil
     end
-
   end
-
 end
-

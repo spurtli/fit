@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = MonitoringInfo.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,15 +14,10 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class MonitoringInfo < FitDataRecord
-
     def initialize(field_values = {})
       super('monitoring_info')
       set_field_values(field_values)
     end
-
   end
-
 end
-

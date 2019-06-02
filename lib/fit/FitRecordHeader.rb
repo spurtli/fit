@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitRecordHeader.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,20 +12,18 @@
 #
 
 module Fit
-
   class FitRecordHeader < BinData::Record
-
     bit1 :normal
 
-    bit1 :message_type, :onlyif => :normal?
+    bit1 :message_type, onlyif: :normal?
 
-    bit1 :developer_data_flag, :onlyif => :normal?
-    bit1 :reserved, :onlyif => :normal?
-    choice :local_message_type, :selection => :normal do
+    bit1 :developer_data_flag, onlyif: :normal?
+    bit1 :reserved, onlyif: :normal?
+    choice :local_message_type, selection: :normal do
       bit4 0
       bit2 1
     end
-    bit5 :time_offset, :onlyif => :compressed?
+    bit5 :time_offset, onlyif: :compressed?
 
     def normal?
       normal.snapshot == 0
@@ -33,7 +32,5 @@ module Fit
     def compressed?
       normal.snapshot == 1
     end
-
   end
-
 end

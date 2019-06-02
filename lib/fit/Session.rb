@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Session.rb -- Fit - FIT file processing library for Ruby
 #
@@ -16,11 +17,9 @@ require 'fit/RecordAggregator'
 require 'fit/GeoMath'
 
 module Fit
-
   # The Session objects correspond to the session FIT messages. They hold
   # accumlated data for a set of Lap objects.
   class Session < FitDataRecord
-
     include RecordAggregator
 
     attr_reader :laps, :records
@@ -53,18 +52,14 @@ module Fit
     # Perform some basic consistency and logical checks on the object. Errors
     # are reported via the Log object.
     def check(activity)
-      unless @first_lap_index
-        Log.fatal 'first_lap_index is not set'
-      end
-      unless @num_laps
-        Log.fatal 'num_laps is not set'
-      end
+      Log.fatal 'first_lap_index is not set' unless @first_lap_index
+      Log.fatal 'num_laps is not set' unless @num_laps
       @first_lap_index.upto(@first_lap_index - @num_laps) do |i|
         if (lap = activity.lap[i])
           @laps << lap
         else
           Log.fatal "Session references lap #{i} which is not contained in "
-                    "the FIT file."
+          'the FIT file.'
         end
       end
     end
@@ -80,8 +75,5 @@ module Fit
 
       @total_distance / (@total_strides * 2.0)
     end
-
   end
-
 end
-

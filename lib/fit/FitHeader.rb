@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitHeader.rb -- Fit - FIT file processing library for Ruby
 #
@@ -16,19 +17,17 @@ require 'fit/Log'
 require 'fit/CRC16'
 
 module Fit
-
   class FitHeader < BinData::Record
-
     include CRC16
 
     endian :little
 
-    uint8 :header_size, :initial_value => 14
-    uint8 :protocol_version, :initial_value => 32
-    uint16 :profile_version, :initial_value => 1012
-    uint32 :data_size, :initial_value => 0
-    string :data_type, :read_length => 4, :initial_value => '.FIT'
-    uint16 :crc, :initial_value => 0, :onlyif => :has_crc?
+    uint8 :header_size, initial_value: 14
+    uint8 :protocol_version, initial_value: 32
+    uint16 :profile_version, initial_value: 1012
+    uint32 :data_size, initial_value: 0
+    string :data_type, read_length: 4, initial_value: '.FIT'
+    uint16 :crc, initial_value: 0, onlyif: :has_crc?
 
     def read(io)
       super
@@ -41,7 +40,7 @@ module Fit
       end
       if crc.snapshot != 0 &&
          compute_crc(io, 0, header_size.snapshot - 2) != crc.snapshot
-        Log.fatal "CRC mismatch in header."
+        Log.fatal 'CRC mismatch in header.'
       end
     end
 
@@ -52,13 +51,13 @@ module Fit
     end
 
     def dump
-      puts <<"EOT"
-Fit File Header
-  Header Size: #{header_size.snapshot}
-  Protocol Version: #{protocol_version.snapshot}
-  Profile Version: #{profile_version.snapshot}
-  Data Size: #{data_size.snapshot}
-EOT
+      puts <<~"EOT"
+        Fit File Header
+          Header Size: #{header_size.snapshot}
+          Protocol Version: #{protocol_version.snapshot}
+          Profile Version: #{profile_version.snapshot}
+          Data Size: #{data_size.snapshot}
+      EOT
     end
 
     def has_crc?
@@ -66,10 +65,7 @@ EOT
     end
 
     def end_pos
-      header_size.snapshot  + data_size.snapshot
+      header_size.snapshot + data_size.snapshot
     end
-
   end
-
 end
-

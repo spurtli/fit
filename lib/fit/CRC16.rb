@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = CRC16.rb -- Fit - FIT file processing library for Ruby
 #
@@ -12,9 +13,7 @@
 #
 
 module Fit
-
   module CRC16
-
     def write_crc(io, start_pos, end_pos)
       # Compute the checksum over the data section of the file and append it
       # to the file. Ideally, we should compute the CRC from data in memory
@@ -36,9 +35,7 @@ module Fit
 
       crc = 0
       while io.pos < end_pos
-        if io.eof?
-          raise IOError, "Premature end of file"
-        end
+        raise IOError, 'Premature end of file' if io.eof?
 
         byte = io.readbyte
 
@@ -51,8 +48,5 @@ module Fit
 
       crc
     end
-
   end
-
 end
-

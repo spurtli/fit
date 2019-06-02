@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = HeartRateZones.rb -- Fit - FIT file processing library for Ruby
 #
@@ -14,9 +15,7 @@ require 'fit/FitDataRecord'
 require 'fit/RecordAggregator'
 
 module Fit
-
   class HeartRateZones < FitDataRecord
-
     include RecordAggregator
 
     def initialize(field_values)
@@ -30,7 +29,5 @@ module Fit
         Log.fatal "lap_index must be #{index}, not #{@lap_index}"
       end
     end
-
   end
-
 end

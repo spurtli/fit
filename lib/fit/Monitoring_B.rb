@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Monitoring_B.rb -- Fit - FIT file processing library for Ruby
 #
@@ -18,20 +19,18 @@ require 'fit/MonitoringInfo'
 require 'fit/Monitoring'
 
 module Fit
-
   # The Monitoring_B object is a FIT file class. It's a top-level object that
   # holds all references to other FIT records that are part of the FIT file.
   # Each of the objects it references are direct equivalents of the message
   # record structures used in the FIT file.
   class Monitoring_B < FitDataRecord
-
     attr_accessor :file_id, :field_descriptions, :device_infos, :software,
-      :monitoring_infos, :monitorings
+                  :monitoring_infos, :monitorings
 
     # Create a new Monitoring_B object.
     # @param field_values [Hash] A Hash that provides initial values for
     #        certain fields of the FitDataRecord.
-    def initialize(field_values = {})
+    def initialize(_field_values = {})
       super('activity')
       @num_sessions = 0
 
@@ -60,7 +59,7 @@ module Fit
            record.timestamp_16 < last_ts_16
           # Detect timestamp_16 wrap-arounds. timestamp_16 is a 16 bit value.
           # In case of a wrap-around we adjust the ts_16_offset accordingly.
-          ts_16_offset += 2 ** 16
+          ts_16_offset += 2**16
         end
         if ts_16_offset
           # We have already found the offset. Adjust all timestamps according
@@ -112,8 +111,5 @@ module Fit
 
       record
     end
-
   end
-
 end
-

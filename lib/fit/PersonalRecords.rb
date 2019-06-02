@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = PersonalRecords.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,15 +14,10 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class PersonalRecords < FitDataRecord
-
     def initialize(field_values = {})
       super('personal_records')
       set_field_values(field_values)
     end
-
   end
-
 end
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitRecord.rb -- Fit - FIT file processing library for Ruby
 #
@@ -19,13 +20,11 @@ require 'fit/FitFileEntity'
 require 'fit/DumpedField'
 
 module Fit
-
   # The FitRecord is a basic building block of a FIT file. It can either
   # contain a definition of a message record or an actual message record with
   # FIT data. A FIT record always starts with a header that describes what
   # kind of record this is.
   class FitRecord
-
     attr_reader :number
 
     def initialize(definitions, fit_entity)
@@ -49,7 +48,8 @@ module Fit
       if header.normal? && header.message_type.snapshot == 1
         # process definition message
         definition = FitDefinition.read(
-          io, entity, header.developer_data_flag.snapshot, @fit_entity)
+          io, entity, header.developer_data_flag.snapshot, @fit_entity
+        )
         @definitions[local_message_type] = FitMessageRecord.new(definition)
       else
         # process data message
@@ -90,8 +90,5 @@ module Fit
         # Avoid ugly error message when aborting a less/more pipe.
       end
     end
-
   end
-
 end
-

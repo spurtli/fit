@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = EPO_Data.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,9 +14,7 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class EPO_Data < FitDataRecord
-
     def initialize(field_values = {})
       super('epo_data')
       # Ignore the sub-seconds to avoid problems when comparing records.
@@ -23,9 +22,5 @@ module Fit
 
       set_field_values(field_values)
     end
-
   end
-
 end
-
-

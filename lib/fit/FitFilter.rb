@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitFilter.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,7 +12,6 @@
 #
 
 module Fit
-
   class FitFilter < Struct.new(:record_numbers, :record_indexes, :field_names,
                                :ignore_undef)
 
@@ -19,8 +19,5 @@ module Fit
       super
       self[:ignore_undef] = false
     end
-
   end
-
 end
-

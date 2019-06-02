@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = DumpedField.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,12 +12,10 @@
 #
 
 module Fit
-
   # If the user has requested a dump of the records, this class is used to
   # capture a subset of the field related information for the later textual
   # dump.
   class DumpedField
-
     attr_reader :message_number, :field_number
 
     # Create a new field dump record.
@@ -39,12 +38,9 @@ module Fit
     end
 
     def to_s(index)
-      "[#{'%03d' % @message_number}:#{'%03d' % index}:" +
-      "#{'%03d' % @field_number}:" +
-      "#{"%-7s" % @type}] #{@name}: " + "#{@value}"
+      "[#{format('%03d', @message_number)}:#{format('%03d', index)}:" \
+        "#{format('%03d', @field_number)}:" \
+        "#{format('%-7s', @type)}] #{@name}: " + @value.to_s
     end
-
   end
-
 end
-

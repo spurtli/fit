@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = RecordAggregator.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,9 +12,7 @@
 #
 
 module Fit
-
   module RecordAggregator
-
     def aggregate
       return if @records.empty?
 
@@ -40,20 +39,20 @@ module Fit
 
       @records.each do |r|
         if r.position_lat
-          if (@swc_lat.nil? || r.position_lat < @swc_lat)
+          if @swc_lat.nil? || r.position_lat < @swc_lat
             @swc_lat = r.position_lat
           end
-          if (@nec_lat.nil? || r.position_lat > @nec_lat)
+          if @nec_lat.nil? || r.position_lat > @nec_lat
             @nec_lat = r.position_lat
           end
         end
-        if r.position_long
-          if (@swc_long.nil? || r.position_long < @swc_long)
-            @swc_long = r.position_long
-          end
-          if (@nec_long.nil? || r.position_long > @nec_long)
-            @nec_long = r.position_long
-          end
+        next unless r.position_long
+
+        if @swc_long.nil? || r.position_long < @swc_long
+          @swc_long = r.position_long
+        end
+        if @nec_long.nil? || r.position_long > @nec_long
+          @nec_long = r.position_long
         end
       end
     end
@@ -76,7 +75,8 @@ module Fit
 
     def aggregate_speed_distance
       @max_speed = 0
-      first_distance, last_distance = nil, nil
+      first_distance = nil
+      last_distance = nil
 
       @records.each do |r|
         @max_speed = r.speed if r.speed && @max_speed < r.speed
@@ -99,9 +99,7 @@ module Fit
         if r.heart_rate
           delta_t = last_timestamp ? r.timestamp - last_timestamp : nil
           total_heart_beats += (r.heart_rate / 60.0) * delta_t if delta_t
-          if r.heart_rate > @max_heart_rate
-            @max_heart_rate = r.heart_rate
-          end
+          @max_heart_rate = r.heart_rate if r.heart_rate > @max_heart_rate
         end
         last_timestamp = r.timestamp
       end
@@ -142,7 +140,7 @@ module Fit
       end
 
       @avg_vertical_oscillation = total_vertical_oscillation /
-        vertical_oscillation_count
+                                  vertical_oscillation_count
     end
 
     def aggregate_stance_time
@@ -167,8 +165,5 @@ module Fit
       @avg_stance_time_percent = stance_time_percent_count > 0 ?
         total_stance_time_percent / stance_time_percent_count : 0
     end
-
   end
-
 end
-

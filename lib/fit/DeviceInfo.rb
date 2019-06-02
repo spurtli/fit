@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = DeviceInfo.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,9 +14,7 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class DeviceInfo < FitDataRecord
-
     def initialize(field_values = {})
       super('device_info')
       set_field_values(field_values)
@@ -32,7 +31,7 @@ module Fit
         @timestamp <=> fdr.timestamp
     end
 
-    def check(index)
+    def check(_index)
       unless @device_index
         Log.fatal 'device info record must have a device_index'
       end
@@ -42,7 +41,7 @@ module Fit
         end
         if @manufacturer == 'garmin'
           unless @garmin_product
-            Log.fatal 'device info record 0 must have a garman_product ' +
+            Log.fatal 'device info record 0 must have a garman_product ' \
                       'field set'
           end
         else
@@ -55,8 +54,5 @@ module Fit
         end
       end
     end
-
   end
-
 end
-

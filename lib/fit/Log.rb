@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Log.rb -- Fit - FIT file processing library for Ruby
 #
@@ -15,21 +16,19 @@ require 'logger'
 require 'singleton'
 
 module Fit
-
   # This is the Exception type that will be thrown for all unrecoverable
   # errors.
-  class Error < StandardError ; end
+  class Error < StandardError; end
 
   # This is the Exception type that will be thrown for all program errors that
   # are caused by user error rather than program logic errors.
-  class Abort < StandardError ; end
+  class Abort < StandardError; end
 
   # The ILogger class is a singleton that provides a common logging mechanism
   # to all objects. It exposes essentially the same interface as the Logger
   # class, just as a singleton and with some additional methods like 'fatal'
   # and 'cricital'.
   class ILogger < Monitor
-
     include Singleton
 
     @@logger = Logger.new($stdout)
@@ -37,12 +36,10 @@ module Fit
     # Redirect all log messages to the given IO.
     # @param io [IO] Output file descriptor
     def open(io)
-      begin
-        @@logger = Logger.new(io)
-      rescue => e
-        @@logger = Logger.new($stderr)
-        Log.fatal "Cannot open log file: #{e.message}"
-      end
+      @@logger = Logger.new(io)
+    rescue StandardError => e
+      @@logger = Logger.new($stderr)
+      Log.fatal "Cannot open log file: #{e.message}"
     end
 
     # Pass all calls to unknown methods to the @@logger object.
@@ -51,7 +48,7 @@ module Fit
     end
 
     # Make it properly introspectable.
-    def respond_to?(method, include_private = false)
+    def respond_to?(method, _include_private = false)
       @@logger.respond_to?(method)
     end
 
@@ -69,14 +66,11 @@ module Fit
       @@logger.error(msg, &block)
       raise Error, msg
     end
-
   end
 
   Log = ILogger.instance
   Log.level = Logger::WARN
-  Log.formatter = proc do |severity, time, progname, msg|
+  Log.formatter = proc do |_severity, _time, _progname, msg|
     msg + "\n"
   end
-
 end
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = FitDefinitionField.rb -- Fit - FIT file processing library for Ruby
 #
@@ -18,14 +19,12 @@ require 'fit/GlobalFitMessage'
 require 'fit/FitTypeDefs'
 
 module Fit
-
   # The FitDefinitionField models the part of the FIT file that contains the
   # template definition for a field of a FitMessageRecord. It should match the
   # corresponding definition in GlobalFitMessages. In case we don't have a
   # known entry in GlobalFitMessages we can still read the file since we know
   # the exact size of the binary records.
   class FitDefinitionField < BinData::Record
-
     include FitDefinitionFieldBase
 
     hide :reserved
@@ -42,20 +41,22 @@ module Fit
       field_number = field_definition_number.snapshot
       if @global_message_definition &&
          (field = @global_message_definition.fields_by_number[field_number])
-         @name = field.respond_to?('name') ? field.name :
-                                             "choice_#{field_number}"
-         @type = field.respond_to?('type') ? field.type : nil
+        @name = field.respond_to?('name') ? field.name :
+                                            "choice_#{field_number}"
+        @type = field.respond_to?('type') ? field.type : nil
 
-         if @type && (td = FIT_TYPE_DEFS[checked_base_type_number]) &&
-            td[0] != @type
-           Log.warn "#{@global_message_number}:#{@name} must be of type " +
-           "#{@type}, not #{td[0]}"
-         end
+        if @type && (td = FIT_TYPE_DEFS[checked_base_type_number]) &&
+           td[0] != @type
+          Log.warn "#{@global_message_number}:#{@name} must be of type " \
+                   "#{@type}, not #{td[0]}"
+        end
       else
         @name = "field#{field_definition_number.snapshot}"
         @type = nil
-        Log.warn { "Unknown field number #{field_definition_number} " +
-                   "in global message #{@global_message_number}" }
+        Log.warn do
+          "Unknown field number #{field_definition_number} " \
+            "in global message #{@global_message_number}"
+        end
       end
     end
 
@@ -69,14 +70,14 @@ module Fit
       value = nil if value == undefined_value
 
       field_number = field_definition_number.snapshot
-      if value.kind_of?(Array)
+      if value.is_a?(Array)
         ary = []
         value.each { |v| ary << to_machine(v) }
         ary
       else
         if @global_message_definition &&
-           (field = @global_message_definition.
-            fields_by_number[field_number]) &&
+           (field = @global_message_definition
+            .fields_by_number[field_number]) &&
            field.respond_to?('to_machine')
           field.to_machine(value)
         else
@@ -89,7 +90,7 @@ module Fit
       init unless @global_message_number
       value = nil if value == undefined_value
 
-      if value.kind_of?(Array)
+      if value.is_a?(Array)
         s = '[ '
         value.each { |v| s << to_s(v) + ' ' }
         s + ']'
@@ -99,11 +100,9 @@ module Fit
            (field = @global_message_definition.fields_by_number[field_number])
           field.to_s(value)
         else
-          "[#{value.to_s}]"
+          "[#{value}]"
         end
       end
     end
-
   end
-
 end

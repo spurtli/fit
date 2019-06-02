@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = Activity.rb -- Fit - FIT file processing library for Ruby
 #
@@ -11,9 +12,7 @@
 #
 
 module Fit
-
   module GeoMath
-
     # This method uses the ellipsoidal earth projected to a plane formula
     # prescribed by the FCC in 47 CFR 73.208 for distances not exceeding 475
     # km /295 miles.
@@ -22,7 +21,7 @@ module Fit
     # @param p2_lat Latitude of the second point in polar degrees
     # @param p2_lon Longitude of the second point in polar degrees
     # @return Distance in meters
-    def GeoMath.distance(p1_lat, p1_lon, p2_lat, p2_lon)
+    def self.distance(p1_lat, p1_lon, p2_lat, p2_lon)
       # Difference in latitude and longitude
       delta_lat = p2_lat - p1_lat
       delta_lon = p2_lon - p1_lon
@@ -38,18 +37,15 @@ module Fit
            0.09455 * cos(3 * mean_lat) +
            0.00012 * cos(5 * mean_lat)
 
-      Math.sqrt(((k1 * delta_lat)) ** 2 + (k2 * delta_lon) ** 2) * 1000.0
+      Math.sqrt(((k1 * delta_lat))**2 + (k2 * delta_lon)**2) * 1000.0
     end
 
-    def GeoMath.cos(deg)
+    def self.cos(deg)
       Math.cos(deg_to_rad(deg))
     end
 
-    def GeoMath.deg_to_rad(deg)
+    def self.deg_to_rad(deg)
       deg * Math::PI / 180
     end
-
   end
-
 end
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby -w
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # = SensorSettings.rb -- Fit - FIT file processing library for Ruby
 #
@@ -13,9 +14,7 @@
 require 'fit/FitDataRecord'
 
 module Fit
-
   class SensorSettings < FitDataRecord
-
     def initialize(field_values = {})
       super('sensor_settings')
       set_field_values(field_values)
@@ -32,13 +31,10 @@ module Fit
         @timestamp <=> fdr.timestamp
     end
 
-    def check(index)
+    def check(_index)
       unless @message_index
         Log.fatal 'sensor setting record must have a message_index'
       end
     end
-
   end
-
 end
-
