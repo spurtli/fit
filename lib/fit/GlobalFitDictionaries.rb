@@ -23,6 +23,7 @@ module Fit
     entry 4, 'fitness_equipment'
     entry 5, 'swimming'
     entry 6, 'walking'
+    entry 8, 'sedentary'
     entry 254, 'all'
 
     dict 'activity_level'
