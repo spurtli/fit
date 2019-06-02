@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby -w
 # encoding: UTF-8
 #
-# = FileNameCoder_spec.rb -- Fit4Ruby - FIT file processing library for Ruby
+# = FileNameCoder_spec.rb -- Fit - FIT file processing library for Ruby
 #
 # Copyright (c) 2015 by Chris Schlaeger <cs@taskjuggler.org>
 #
@@ -13,9 +13,9 @@
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'time'
-require 'fit4ruby/FileNameCoder'
+require 'fit/FileNameCoder'
 
-describe Fit4Ruby::FileNameCoder do
+describe Fit::FileNameCoder do
 
   before(:all) do
     @data = [
@@ -28,25 +28,25 @@ describe Fit4Ruby::FileNameCoder do
 
   it 'should convert a time stamps to a file names' do
     @data.each do |t|
-      expect(Fit4Ruby::FileNameCoder.encode(Time.parse(t[0]))).to eq(t[1])
+      expect(Fit::FileNameCoder.encode(Time.parse(t[0]))).to eq(t[1])
     end
   end
 
   it 'should convert file names to time stamps' do
     @data.each do |t|
-      expect(Fit4Ruby::FileNameCoder.decode(t[1])).to eq(Time.parse(t[0]).utc)
+      expect(Fit::FileNameCoder.decode(t[1])).to eq(Time.parse(t[0]).utc)
     end
   end
 
   it 'should fail to encode dates before 2010' do
     expect {
-      Fit4Ruby::FileNameCoder.encode(Time.parse('2009-12-31T00:00'))
+      Fit::FileNameCoder.encode(Time.parse('2009-12-31T00:00'))
     }.to raise_error(ArgumentError)
   end
 
   it 'should fail to encode dates after 2033' do
     expect {
-      Fit4Ruby::FileNameCoder.encode(Time.parse('2034-01-01T00:00+00:00'))
+      Fit::FileNameCoder.encode(Time.parse('2034-01-01T00:00+00:00'))
     }.to raise_error(ArgumentError)
   end
 
@@ -55,7 +55,7 @@ describe Fit4Ruby::FileNameCoder do
       '44063106.FIT', '44W63106.FIT',
       '557O1650.FIT', '557G6050.FIT', '557G1660.FIT' ].each do |name|
       expect {
-        Fit4Ruby::FileNameCoder.decode(name)
+        Fit::FileNameCoder.decode(name)
       }.to raise_error(ArgumentError)
     end
   end

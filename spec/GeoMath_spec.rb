@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby -w
 # encoding: UTF-8
 #
-# = FitFile_spec.rb -- Fit4Ruby - FIT file processing library for Ruby
+# = FitFile_spec.rb -- Fit - FIT file processing library for Ruby
 #
 # Copyright (c) 2014, 2015 by Chris Schlaeger <cs@taskjuggler.org>
 #
@@ -12,9 +12,9 @@
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'fit4ruby/GeoMath'
+require 'fit/GeoMath'
 
-describe Fit4Ruby::GeoMath do
+describe Fit::GeoMath do
 
   it 'should compute a distance between 2 points' do
     p0_lat = 48.180506536737084
@@ -27,7 +27,7 @@ describe Fit4Ruby::GeoMath do
       [ 48.17970883101225, 11.611351054161787, 100.225 ]
     ]
     points.each do |p|
-      expect(Fit4Ruby::GeoMath.distance(
+      expect(Fit::GeoMath.distance(
         p0_lat, p0_lon, p[0], p[1])).to be_within(0.001).of(p[2])
     end
   end

@@ -1,6 +1,6 @@
-# Fit4Ruby
+# Fit
 
-Fit4Ruby is a [http://www.ruby-lang.org](Ruby) libary to read and
+Fit is a [http://www.ruby-lang.org](Ruby) libary to read and
 write FIT files.
 
 This libary is still work in progress and probably not yet ready to be
@@ -26,9 +26,9 @@ work as well.
 You can create an Activity.
 
 ```
-require 'fit4ruby'
+require 'fit'
 
-a = Fit4Ruby::Activity.new
+a = Fit::Activity.new
 a.total_timer_time = 30 * 60
 a.new_user_profile({ :age => 33, :height => 1.78, :weight => 73.0,
                      :gender => 'male', :activity_class => 4.0,
@@ -86,13 +86,13 @@ a.aggregate
 Save it to a file.
 
 ```
-Fit4Ruby.write('TEST.FIT', a)
+Fit.write('TEST.FIT', a)
 ```
 
 Or read an Activity from a file.
 
 ```
-a = Fit4Ruby.read('TEST.FIT')
+a = Fit.read('TEST.FIT')
 ```
 
 Then you can access the data in the file.
@@ -104,7 +104,7 @@ a.records.each do |r|
 end
 ```
 
-Please see lib/fit4ruby/GlobalFitMessages.rb for the data fields that
+Please see lib/fit/GlobalFitMessages.rb for the data fields that
 are supported for the various FIT record types.
 
 ## License

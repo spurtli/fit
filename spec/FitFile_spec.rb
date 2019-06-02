@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby -w
 # encoding: UTF-8
 #
-# = FitFile_spec.rb -- Fit4Ruby - FIT file processing library for Ruby
+# = FitFile_spec.rb -- Fit - FIT file processing library for Ruby
 #
 # Copyright (c) 2014, 2015 by Chris Schlaeger <cs@taskjuggler.org>
 #
@@ -12,13 +12,13 @@
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'fit4ruby'
+require 'fit'
 
-describe Fit4Ruby do
+describe Fit do
 
   before(:each) do
     ts = Time.now
-    a = Fit4Ruby::Activity.new
+    a = Fit::Activity.new
     a.total_timer_time = 30 * 60.0
     a.new_user_data({ :age => 33, :height => 1.78, :weight => 73.0,
                       :gender => 'male', :activity_class => 4.0,
@@ -105,10 +105,10 @@ describe Fit4Ruby do
     fit_file = 'test.fit'
 
     File.delete(fit_file) if File.exists?(fit_file)
-    Fit4Ruby.write(fit_file, @activity)
+    Fit.write(fit_file, @activity)
     expect(File.exists?(fit_file)).to be true
 
-    b = Fit4Ruby.read(fit_file)
+    b = Fit.read(fit_file)
     expect(b).to eq(@activity)
     File.delete(fit_file)
   end
